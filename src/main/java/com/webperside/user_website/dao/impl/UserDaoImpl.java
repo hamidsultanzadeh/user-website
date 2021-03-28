@@ -55,21 +55,27 @@ public class UserDaoImpl extends AbstractDao implements UserDao {
     }
 
     @Override
-    public void save(User user) {
+    public Integer save(User user) {
         try {
             Connection c = connect();
 
             String sql = "insert into user(name, surname) " +
-                    "values(?,?)";
+                    "values(?,?);";
 
-            PreparedStatement ps = c.prepareStatement(sql);
+            PreparedStatement ps = c.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, user.getName());
             ps.setString(2, user.getSurname());
 
-            ps.execute();
+            ps.executeUpdate();
+
+            ResultSet rs = ps.getGeneratedKeys();
+            if(rs.next()){
+                return rs.getInt(1);
+            }
         } catch (Exception exception) {
             exception.printStackTrace();
         }
+        return null;
     }
 
     @Override
@@ -136,5 +142,47 @@ public class UserDaoImpl extends AbstractDao implements UserDao {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+    @Override
+    public boolean checkUserExistsByEmailAndPassword(String email, String password) {
+        try(Connection c = connect()){
+            String sql = "select u.user_id from user u where u.email=? and u.password=?";
+            PreparedStatement ps = c.prepareStatement(sql);
+            ps.setString(1,email);
+            ps.setString(2,password);
+            ps.execute();
+            ResultSet rs = ps.getResultSet();
+            if(rs.next()){
+                return true;
+            }
+        } catch (Exception ex){
+            ex.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
+    public User getUserByEmailAndPassword(String email, String password) {
+        try(Connection c = connect()){
+            String sql = "select * from user u where u.email=? and u.password=?";
+            PreparedStatement ps = c.prepareStatement(sql);
+            ps.setString(1,email);
+            ps.setString(2,password);
+            ps.execute();
+            ResultSet rs = ps.getResultSet();
+            if(rs.next()){
+                Integer id = rs.getInt("user_id");
+                String name = rs.getString("name");
+                String surname = rs.getString("surname");
+                String em = rs.getString("email");
+                String pa = rs.getString("password");
+
+                return new User(id,name,surname, email, password);
+            }
+        } catch (Exception ex){
+            ex.printStackTrace();
+        }
+        return null;
     }
 }

@@ -5,14 +5,11 @@ import com.webperside.user_website.dao.inter.UserSkillDao;
 import com.webperside.user_website.model.Skill;
 import com.webperside.user_website.model.UserSkill;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserDaoSkillImpl extends AbstractDao implements UserSkillDao {
+public class UserSkillDaoImpl extends AbstractDao implements UserSkillDao {
 
     public UserSkill getUserSkill(ResultSet rs) throws SQLException {
         int userSkillId = rs.getInt("user_skill_id");
@@ -37,5 +34,24 @@ public class UserDaoSkillImpl extends AbstractDao implements UserSkillDao {
             ex.printStackTrace();
         }
         return result;
+    }
+
+    @Override
+    public void saveUserSkill(Integer userId, Integer skillId, Integer power) {
+        try {
+            Connection c = connect();
+
+            String sql = "insert into user_skill(fk_user_id, fk_skill_id, power) " +
+                    "values(?,?,?)";
+
+            PreparedStatement ps = c.prepareStatement(sql);
+            ps.setInt(1, userId);
+            ps.setInt(2, skillId);
+            ps.setInt(3, power);
+
+            ps.execute();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
     }
 }

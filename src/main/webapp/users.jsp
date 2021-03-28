@@ -19,9 +19,11 @@
 
 <%
     List<User> users =(List<User>) request.getAttribute("alma");
+    User loggedUser = (User) request.getSession().getAttribute("userLoggedIn");
 %>
 
 <div class="container">
+    <h3>Welcome, <%=loggedUser.getName() + " " + loggedUser.getSurname()%></h3>
     <form action="users" method="get">
         <div class="mb-3">
             <label for="exampleInputEmail1" class="form-label">Name</label>

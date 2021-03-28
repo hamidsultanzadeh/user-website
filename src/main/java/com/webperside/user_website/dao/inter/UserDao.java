@@ -11,12 +11,16 @@ public interface UserDao {
 
     boolean checkUserExistsById(Integer userId);
 
-    void save(User user);
+    Integer save(User user);
 
     void update(User user);
 
     List<User> findAll(String name, String surname);
 
     void delete(Integer userId);
+
+    boolean checkUserExistsByEmailAndPassword(String email, String password);
+
+    User getUserByEmailAndPassword(String email, String password);
 
 }

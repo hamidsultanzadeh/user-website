@@ -1,8 +1,12 @@
 package com.webperside.user_website.controller;
 
 import com.webperside.user_website.config.Context;
+import com.webperside.user_website.dao.inter.SkillDao;
 import com.webperside.user_website.dao.inter.UserDao;
+import com.webperside.user_website.dao.inter.UserSkillDao;
+import com.webperside.user_website.model.Skill;
 import com.webperside.user_website.model.User;
+import com.webperside.user_website.util.ControllerUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,27 +14,52 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 @WebServlet(name = "UserAddController", urlPatterns = "/user-add")
 public class UserAddController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        SkillDao skillDao = Context.skillDaoInstance();
+        List<Skill> skills = skillDao.findAll();
+        req.setAttribute("skills", skills);
         req.getRequestDispatcher("user-add.jsp").forward(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        UserDao dao = Context.userDaoInstance();
+        try {
+            UserDao dao = Context.userDaoInstance();
+            SkillDao skillDao = Context.skillDaoInstance();
+            UserSkillDao userSkillDao = Context.userSkillDaoInstance();
 
-        User u = new User();
+            String skillIdStr = req.getParameter("skillId");
 
-        u.setName(req.getParameter("name"));
-        u.setSurname(req.getParameter("surname"));
+            if (skillIdStr != null) {
+                Integer skillId = Integer.parseInt(skillIdStr);
+                if (skillDao.checkSkillExistsById(skillId)) {
+                    User u = new User();
 
-        dao.save(u);
+                    u.setName(req.getParameter("name"));
+                    u.setSurname(req.getParameter("surname"));
 
-        resp.sendRedirect("users");
+                    int id = dao.save(u);
+
+                    userSkillDao.saveUserSkill(id, skillId, 10);
+                    resp.sendRedirect("users");
+                } else{
+                    throw new IllegalArgumentException("Skill not found");
+                }
+            } else {
+                throw new IllegalArgumentException("Skill ID undefined");
+            }
+
+
+        } catch (Exception ex){
+            ex.printStackTrace();
+            ControllerUtil.redirectToError(resp, ex.getMessage());
+        }
     }
 }

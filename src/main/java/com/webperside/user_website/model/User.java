@@ -7,6 +7,8 @@ public class User {
     private Integer userId;
     private String name;
     private String surname;
+    private String email;
+    private String password;
     private List<UserSkill> skills;
 
     public User() {
@@ -27,6 +29,14 @@ public class User {
         this.name = name;
         this.surname = surname;
         this.skills = skills;
+    }
+
+    public User(Integer userId, String name, String surname, String email, String password) {
+        this.userId = userId;
+        this.name = name;
+        this.surname = surname;
+        this.email = email;
+        this.password = password;
     }
 
     public Integer getUserId() {
@@ -59,5 +69,21 @@ public class User {
 
     public void setSkills(List<UserSkill> skills) {
         this.skills = skills;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
