@@ -31,8 +31,13 @@
             <label for="exampleInputPassword1" class="form-label">Surname</label>
             <input type="text" class="form-control" id="exampleInputPassword1" name="surname">
         </div>
+        <div class="mb-3" id="skill-power-div">
+
+        </div>
         <div class="mb-3">
-            <select name="skillId" class="form-select" aria-label="Default select example">
+            <select onclick="createSkillAndPowerDiv()"
+                    id="select-skill"
+                    class="form-select" aria-label="Default select example">
                 <option selected>Select an skill</option>
                 <%
                     for(Skill skill : skills){
@@ -47,6 +52,47 @@
     </form>
 </div>
 
+<script>
+
+    function deleteSkill(id) {
+        document.getElementById(id).remove()
+    }
+
+    function createSkillAndPowerDiv() {
+
+        const selectSkill = document.getElementById("select-skill");
+        const skillId = selectSkill.options[selectSkill.selectedIndex].value
+        const skillName = selectSkill.options[selectSkill.selectedIndex].innerText
+
+        console.log(skillId, skillName)
+        const root = document.createElement("div");
+        root.id = skillId.trim() + skillName.trim();
+
+        const input = document.createElement("input");
+        input.setAttribute("name", "skillId[]")
+        input.hidden = true;
+        input.setAttribute("value",skillId)
+
+        const label = document.createElement("span");
+        label.innerText = skillName;
+
+        const input2 = document.createElement("input");
+        input2.setAttribute("name", "power[]")
+
+        const button = document.createElement("button");
+        button.innerText = "Delete"
+        button.type="button";
+        button.onclick = function () {
+            deleteSkill(root.id);
+        };
+
+        const skillPowerDiv = document.getElementById("skill-power-div");
+
+        root.append(input, label, input2, button)
+
+        skillPowerDiv.append(root);
+    }
+</script>
 
 </body>
 </html>
