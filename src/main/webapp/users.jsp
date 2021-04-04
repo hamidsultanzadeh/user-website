@@ -1,6 +1,4 @@
-<%@ page import="com.webperside.user_website.dao.inter.UserDao" %>
-<%@ page import="com.webperside.user_website.model.User" %>
-<%@ page import="com.webperside.user_website.config.Context" %>
+<%@ page import="com.webperside.user_website.jpa.model.User" %>
 <%@ page import="java.util.List" %><%--
   Created by IntelliJ IDEA.
   User: hamid

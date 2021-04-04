@@ -1,8 +1,8 @@
 package com.webperside.user_website.controller;
 
-import com.webperside.user_website.config.Context;
-import com.webperside.user_website.dao.inter.UserDao;
-import com.webperside.user_website.model.User;
+import com.webperside.user_website.config.ContextJpa;
+import com.webperside.user_website.jpa.dao.inter.UserJpaDao;
+import com.webperside.user_website.jpa.model.User;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -20,7 +20,9 @@ public class UsersController extends HttpServlet {
         String name = req.getParameter("name");
         String surname = req.getParameter("surname");
 
-        UserDao dao = Context.userDaoInstance();
+//        UserDao dao = Context.userDaoInstance();
+
+        UserJpaDao dao = ContextJpa.userDaoInstance();
 
         List<User> users = dao.findAll(name, surname);
 

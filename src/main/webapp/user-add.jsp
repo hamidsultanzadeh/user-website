@@ -5,11 +5,8 @@
   Time: 13:21
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page import="com.webperside.user_website.model.User" %>
-<%@ page import="com.webperside.user_website.dao.inter.UserDao" %>
-<%@ page import="com.webperside.user_website.config.Context" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.webperside.user_website.model.Skill" %>
+<%@ page import="com.webperside.user_website.jpa.model.Skill" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -30,6 +27,14 @@
         <div class="mb-3">
             <label for="exampleInputPassword1" class="form-label">Surname</label>
             <input type="text" class="form-control" id="exampleInputPassword1" name="surname">
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputEmail12" class="form-label">Email</label>
+            <input type="text" class="form-control" id="exampleInputEmail12" name="email">
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputPassword12" class="form-label">Password</label>
+            <input type="text" class="form-control" id="exampleInputPassword12" name="password">
         </div>
         <div class="mb-3" id="skill-power-div">
 

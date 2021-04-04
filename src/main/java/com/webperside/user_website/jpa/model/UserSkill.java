@@ -21,4 +21,39 @@ public class UserSkill {
 
     @Column(name = "power")
     private Integer power;
+
+    public UserSkill() {
+    }
+
+    public Integer getUserSkillId() {
+        return userSkillId;
+    }
+
+    public void setUserSkillId(Integer userSkillId) {
+        this.userSkillId = userSkillId;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Skill getSkill() {
+        return skill;
+    }
+
+    public void setSkill(Skill skill) {
+        this.skill = skill;
+    }
+
+    public Integer getPower() {
+        return power;
+    }
+
+    public void setPower(Integer power) {
+        this.power = power;
+    }
 }

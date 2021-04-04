@@ -1,8 +1,8 @@
 package com.webperside.user_website.controller;
 
-import com.webperside.user_website.config.Context;
-import com.webperside.user_website.dao.inter.UserDao;
-import com.webperside.user_website.model.User;
+import com.webperside.user_website.config.ContextJpa;
+import com.webperside.user_website.jpa.dao.inter.UserJpaDao;
+import com.webperside.user_website.jpa.model.User;
 import com.webperside.user_website.util.ControllerUtil;
 
 import javax.servlet.ServletException;
@@ -37,7 +37,8 @@ public class LoginController extends HttpServlet {
             // jwt.io ->
 
             if(email != null && password != null){
-                UserDao dao = Context.userDaoInstance();
+//                UserDao dao = Context.userDaoInstance();
+                UserJpaDao dao = ContextJpa.userDaoInstance();
 
                 User loggedUser = dao.getUserByEmailAndPassword(email, password);
 

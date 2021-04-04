@@ -1,6 +1,10 @@
 package com.webperside.user_website.jpa;
 
+import com.webperside.user_website.jpa.dao.impl.SkillJpaDaoImpl;
+import com.webperside.user_website.jpa.dao.impl.UserJpaDaoImpl;
+import com.webperside.user_website.jpa.model.Skill;
 import com.webperside.user_website.jpa.model.User;
+import com.webperside.user_website.jpa.model.UserSkill;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -9,57 +13,28 @@ import javax.persistence.Persistence;
 public class Main {
 
     public static void main(String[] args) {
-//        EntityManagerFactory emf = Persistence.createEntityManagerFactory("user-db-jpa");
-//        EntityManager em = emf.createEntityManager();
+
+//        SkillJpaDaoImpl skillDaoImpl = new SkillJpaDaoImpl();
 //
-//        User user = em.find(User.class, 15);
-
-//        User user = getById();
+//        Skill skill = skillDaoImpl.findAll().get(0);
 //
-//        user.setName("hamid");
+////        System.out.println(skillDaoImpl.checkSkillExistsById(1));
+//
+        UserJpaDaoImpl daoImpl = new UserJpaDaoImpl();
 
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("user-db-jpa");
-        EntityManager em = emf.createEntityManager();
-
-        User user = em.find(User.class, 15);
-
-        try{
-            em.getTransaction().begin();
-            em.remove(user);
-            em.remove(user);
-            em.remove(user);
-            em.remove(user); // update
-            em.getTransaction().commit();
-        } catch (Exception ex){
-            em.getTransaction().rollback();
-        }
-
-
+        System.out.println(daoImpl.findAllCriteriaBuilder("Hamid", ""));
+//
 //        User user = new User();
-//        user.setName("hamid");
-//        user.setSurname("sultanzadeh");
-//        user.setEmail("hs@gmail.com");
-//        user.setPassword("12345");
+//        user.setName("Hamid 22");
+//        user.setPassword("hamid123");
+//        user.setSurname("Sultanzadeh 22");
+//        user.setEmail("hamid@gmail.com");
 //
-//        em.getTransaction().begin();
-//        em.persist(user); // save
-//        em.getTransaction().commit();
-
-//        User user = em.find(User.class, 14);
+//        UserSkill userSkill = new UserSkill();
+//        userSkill.setUser(user);
+//        userSkill.setSkill(skill);
+//        userSkill.setPower(18);
 //
-//        System.out.println(user.getSkillList());
-//
-//        System.out.println(user.getEmail());
-    }
-
-    public static User getById(){
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("user-db-jpa");
-        EntityManager em = emf.createEntityManager();
-
-        User user = em.find(User.class, 15);
-
-        emf.close();
-        em.close();
-        return user;
+//        daoImpl.save(user);
     }
 }

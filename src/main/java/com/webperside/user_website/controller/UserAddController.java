@@ -1,11 +1,12 @@
 package com.webperside.user_website.controller;
 
-import com.webperside.user_website.config.Context;
-import com.webperside.user_website.dao.inter.SkillDao;
-import com.webperside.user_website.dao.inter.UserDao;
-import com.webperside.user_website.dao.inter.UserSkillDao;
-import com.webperside.user_website.model.Skill;
-import com.webperside.user_website.model.User;
+import com.webperside.user_website.config.ContextJpa;
+import com.webperside.user_website.jpa.dao.inter.SkillJpaDao;
+import com.webperside.user_website.jpa.dao.inter.UserJpaDao;
+import com.webperside.user_website.jpa.dao.inter.UserSkillJpaDao;
+import com.webperside.user_website.jpa.model.Skill;
+import com.webperside.user_website.jpa.model.User;
+import com.webperside.user_website.jpa.model.UserSkill;
 import com.webperside.user_website.util.ControllerUtil;
 
 import javax.servlet.ServletException;
@@ -14,7 +15,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet(name = "UserAddController", urlPatterns = "/user-add")
@@ -22,7 +23,8 @@ public class UserAddController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        SkillDao skillDao = Context.skillDaoInstance();
+//        SkillDao skillDao = Context.skillDaoInstance();
+        SkillJpaDao skillDao = ContextJpa.skillDaoInstance();
         List<Skill> skills = skillDao.findAll();
         req.setAttribute("skills", skills);
         req.getRequestDispatcher("user-add.jsp").forward(req, resp);
@@ -32,34 +34,50 @@ public class UserAddController extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         try {
-            UserDao dao = Context.userDaoInstance();
-            SkillDao skillDao = Context.skillDaoInstance();
-            UserSkillDao userSkillDao = Context.userSkillDaoInstance();
+//            UserDao dao = Context.userDaoInstance();
+//            SkillDao skillDao = Context.skillDaoInstance();
+//            UserSkillDao userSkillDao = Context.userSkillDaoInstance();
 
-            System.out.println(Arrays.toString(req.getParameterValues("skillId[]")));
-            System.out.println(Arrays.toString(req.getParameterValues("power[]")));
+            UserJpaDao dao = ContextJpa.userDaoInstance();
+            SkillJpaDao skillDao = ContextJpa.skillDaoInstance();
+            UserSkillJpaDao userSkillDao = ContextJpa.userSkillDaoInstance();
 
-            String skillIdStr = req.getParameter("skillId");
+            User u = new User();
 
-            if (skillIdStr != null) {
-                Integer skillId = Integer.parseInt(skillIdStr);
-                if (skillDao.checkSkillExistsById(skillId)) {
-                    User u = new User();
+            u.setName(req.getParameter("name"));
+            u.setSurname(req.getParameter("surname"));
+            u.setEmail(req.getParameter("email"));
+            u.setPassword(req.getParameter("password"));
 
-                    u.setName(req.getParameter("name"));
-                    u.setSurname(req.getParameter("surname"));
+            int id = dao.save(u);
 
-                    int id = dao.save(u);
+            String[] skillsId = req.getParameterValues("skillId[]");
+            String[] powers = req.getParameterValues("power[]");
+            List<Skill> skills = new ArrayList<>();
+            List<UserSkill> userSkills = new ArrayList<>();
 
-                    userSkillDao.saveUserSkill(id, skillId, 10);
-                    resp.sendRedirect("users");
-                } else{
-                    throw new IllegalArgumentException("Skill not found");
+            if(skillsId != null){
+                for(String skillId : skillsId){
+                    Skill skill = skillDao.getSkillById(Integer.parseInt(skillId));
+                    if(skill != null){
+                        skills.add(skill);
+                    }
                 }
-            } else {
-                throw new IllegalArgumentException("Skill ID undefined");
             }
 
+            for(int i = 0 ; i < skills.size() ; i++){
+                Skill skill = skills.get(i);
+                UserSkill userSkill = new UserSkill();
+                userSkill.setUser(u);
+                userSkill.setSkill(skill);
+                userSkill.setPower(Integer.parseInt(powers[i]));
+
+                userSkills.add(userSkill);
+            }
+
+            userSkillDao.saveUserSkillList(userSkills);
+
+            resp.sendRedirect("users.jsp");
 
         } catch (Exception ex){
             ex.printStackTrace();

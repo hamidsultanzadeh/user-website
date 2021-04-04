@@ -1,4 +1,4 @@
-<%@ page import="com.webperside.user_website.model.User" %><%--
+<%@ page import="com.webperside.user_website.jpa.model.User" %><%--
   Created by IntelliJ IDEA.
   User: hamid
   Date: 14.03.21

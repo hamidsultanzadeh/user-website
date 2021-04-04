@@ -1,8 +1,10 @@
 package com.webperside.user_website.controller;
 
 import com.webperside.user_website.config.Context;
+import com.webperside.user_website.config.ContextJpa;
 import com.webperside.user_website.dao.inter.UserDao;
-import com.webperside.user_website.model.User;
+import com.webperside.user_website.jpa.dao.inter.UserJpaDao;
+import com.webperside.user_website.jpa.model.User;
 import com.webperside.user_website.util.ControllerUtil;
 
 import javax.servlet.ServletException;
@@ -23,7 +25,9 @@ public class UserEditController extends HttpServlet {
 
             if (idStr != null) {
                 Integer id = Integer.parseInt(idStr);
-                UserDao dao = Context.userDaoInstance();
+//                UserDao dao = Context.userDaoInstance();
+                UserJpaDao dao = ContextJpa.userDaoInstance();
+
 
                 if (dao.checkUserExistsById(id)) {
                     User u = dao.findById(id);
@@ -49,7 +53,8 @@ public class UserEditController extends HttpServlet {
         try {
             // 1. checkUserExistsById
             // 2. update
-            UserDao dao = Context.userDaoInstance();
+//          UserDao dao = Context.userDaoInstance();
+            UserJpaDao dao = ContextJpa.userDaoInstance();
 
             String action = req.getParameter("action");
 
